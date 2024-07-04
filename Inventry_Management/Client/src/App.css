@@ -1,0 +1,56 @@
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins',sans-serif;
+} 
+/* body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #94afd1;
+} */
+.auth-page-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #94afd1;
+}
+
+.form-container{
+  width: 1000px;
+}
+.title,
+.slogan{
+  text-align: center;
+}
+.btn{
+  width: 100%;
+}
+.auth-image{
+  width: 100%;
+  border-radius: 5%;
+  margin-left: 10px;
+}
+.alert{
+  margin-bottom: 1.5rem;
+}
+
+
+
+
+
+.profile-card{
+  width: 500px;
+}
+.avatar{
+  margin-bottom: 1.5rem;
+}
+.username{
+  text-transform: capitalize;
+}
+.profile-btn{
+  margin-top: 1.3rem;
+  width: 100%;
+} 

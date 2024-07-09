@@ -15,7 +15,7 @@ const ProductsPage = () => {
 
         
         try {
-            const res = await axios.get("http://localhost:4000/api/auth/getproducts",config)
+            const res = await axios.get("https://inventry-store-server.onrender.com/api/auth/getproducts",config)
               setProduct(res.data.products); 
         } catch (error) {
             console.error("There was an error fetching the products!", error);

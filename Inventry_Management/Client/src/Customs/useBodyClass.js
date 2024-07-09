@@ -1,14 +1,19 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../Contexts/AuthContext';
+
 
 const useBodyClass = (className) => {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
+
 
   useEffect(() => {
     const body = document.body;
 
     const applyClass = () => {
-      if (location.pathname === '/' || location.pathname === '/login' || location.pathname === '/logouting') {
+      if (!isAuthenticated || ['/', '/login'].includes(location.pathname)) {
+
         body.classList.add(className);
       } else {
         body.classList.remove(className);
@@ -20,9 +25,9 @@ const useBodyClass = (className) => {
 
     return () => {
       body.classList.remove(className);
-      applyClass();
+      //applyClass();
     };
-  }, [location, className]);
+  }, [location, className, isAuthenticated]);
 };
 
 export default useBodyClass;

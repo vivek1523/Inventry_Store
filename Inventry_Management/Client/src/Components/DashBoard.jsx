@@ -3,12 +3,12 @@ import { useAuth } from '../Contexts/AuthContext';
 import { Avatar, Button, Card, Typography } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
-const DashBoard = ({ setVisible }) => {
+const DashBoard = () => {
   const { userData, logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();
-    setVisible(false);
+   // setVisible(false);
   };
 
   return (

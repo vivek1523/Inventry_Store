@@ -9,7 +9,6 @@ import Product from './Product';
 import useBodyClass from './Customs/useBodyClass';
 
 
-
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
   useBodyClass('auth-page-body');
@@ -18,7 +17,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path='/' element={!isAuthenticated ? <Register /> : <Navigate to='/dashboard' />} />
       <Route path='/login' element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
-      <Route path='/dashboard/*' element={isAuthenticated ? <Product /> : <Login />} />
+      <Route path='/dashboard/*' element={isAuthenticated ? <Product /> : <Navigate to='/login'/>} />
     </Routes>
   );
 }

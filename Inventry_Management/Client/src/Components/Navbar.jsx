@@ -39,7 +39,7 @@ const Navbar = () => {
                   placement="bottomRight"
                 >
                   <Button 
-                    style={{ backgroundColor: "transparent", paddingRight: "20px", border: "none" }} 
+                    style={{ backgroundColor: "transparent",color:"white", paddingRight: "20px", border: "none" }} 
                     icon={<Avatar src={userData.photoURL} icon={!userData.photoURL && <UserOutlined />} />}>
                     {userData.name || 'User'}
                   </Button>

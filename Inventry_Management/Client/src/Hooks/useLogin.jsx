@@ -2,19 +2,17 @@ import { useState } from "react";
 import { useAuth } from "../Contexts/AuthContext.jsx";
 import { message } from "antd";
 
-const useSingup = () => {
+const useLogin = () => {
   const {login} = useAuth();
   const [error, setError] = useState(null);
   const [loading,setLoading] = useState(null);
 
-  const registeredUser = async(values)=>{
-     if(values.password !== values.confrimpassword){
-      return setError("Password are Not same")
-     }
+  const loginUser = async(values)=>{
+     
      try {
       setError(null);
       setLoading(true)
-      const res = await fetch('http://localhost:4000/api/auth/signup',{
+      const res = await fetch('http://localhost:4000/api/auth/login',{
         method:'POST',
         headers:{
            'Content-Type': 'application/json',
@@ -26,20 +24,20 @@ const useSingup = () => {
       if(res.status === 200){
         message.success(data.message);
         login(data.token,data.user);
-      }else if(res.status === 400){
-        setError(data.message);
-      }else{
-        message.error("Registration Failed")
+      }else {
+        setError(new Error(data.message));
+        message.error(data.message);
       }
 
      } catch (error) {
-       message.error(error);
+      setError(error);
+      message.error("Login failed: " + error.message);
      }finally{
       setLoading(false);
      }
   }
-  
-  return { loading, error, registeredUser };
+
+  return { loading, error, loginUser };
 }
 
-export default useSingup
+export default useLogin

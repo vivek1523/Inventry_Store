@@ -2,11 +2,12 @@ const express = require('express')
 const app = express();
 const mongoose = require('mongoose')
 const cors = require('cors')
-const dotenv = require('dotenv').config();
+require('dotenv').config();
 const authRouter = require('./Routes/AuthRoutes')
 //require('./Connection/Mongo')
 const PORT = process.env.PORT || 4000;
 const ProductRoute = require('./Routes/ProductRoute');
+const { authMiddleware } = require('./Controllers/AuthController');
 //const MongooseConnect = require('./Connection/Mongo');
 
 
@@ -14,13 +15,19 @@ const ProductRoute = require('./Routes/ProductRoute');
 app.use(express.json());
 app.use(cors());
 
+// app.use(cors({
+//   origin: 'https://inventry-store-client.onrender.com', 
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true, 
+// }));
+
 //Routes
 app.use('/api/auth',authRouter);
-app.use("/api/auth",ProductRoute);
+app.use("/api/auth",authMiddleware,ProductRoute);
 
 // Mongo Connection for Authentication DB
 //MongooseConnect();
-mongoose.connect('mongodb://127.0.0.1:27017/Inventry_Authentication')
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Database connected'))
   .catch((error) => {
     console.error('Database connection error:', error);

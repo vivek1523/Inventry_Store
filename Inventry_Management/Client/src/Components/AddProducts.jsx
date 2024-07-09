@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import { message } from 'antd';
+import useUniqueUser from '../Hooks/useUniqueUser';
 
-const AddProducts = ({ product, setProducts, products, setSelectedProduct }) => {
+const AddProducts = ({ product, setProducts, Userproducts , setSelectedProduct }) => {
   const [prod, setProd] = useState({
     productName: "",
     description: "",
@@ -9,6 +11,8 @@ const AddProducts = ({ product, setProducts, products, setSelectedProduct }) => 
     Image: "",
     productCount: "",
   });
+
+  const { addProduct, updateProduct } = useUniqueUser();
 
   useEffect(() => {
     if (product) {
@@ -28,31 +32,42 @@ const AddProducts = ({ product, setProducts, products, setSelectedProduct }) => 
   };
 
   const HandleSubmit = async (e) => {
-    e.preventDefault();
-    if (product) {
-      // Updating Exsisting Product
-      await axios.put(`http://localhost:4000/api/auth/updateproduct/${product._id}`, prod)
-        .then((res) => {
-          alert(res.data.message);
-          setProducts(products.map((item) => (item._id === product._id ? { ...item, ...prod } : item)));
-          setSelectedProduct(null);
-        });
-    } else {
-      // Adding New Product
-      await axios.post("http://localhost:4000/api/auth/addproducts", prod)
-        .then((res) => {
-          alert(res.data.message);
-          setProducts([...products, res.data.product]);
-        });
-    }
-    setProd({
-      productName: "",
-      description: "",
-      price: "",
-      Image: "",
-      productCount: "",
-    });
-  };
+        e.preventDefault();
+        //const token = localStorage.getItem('user_data')?.userToken;
+        // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Njg5OGNmYjJkMDQxOWM0NTcwN2MxZDMiLCJpYXQiOjE3MjAyOTA1NTYsImV4cCI6MTcyODA2NjU1Nn0.2AR0zyB8Sv8DAO5Q50O1chgnUbWOc2IejrQg92PMw_w'
+        // const config = {
+        //   headers: { 'authorization': `Bearer ${token}` }
+        // };
+    
+        try {
+          if (product) {
+            // Updating Exsisting Product
+            //const res = await axios.put(`http://localhost:4000/api/auth/updateproduct/${product._id}`, prod,config)
+            const res = await updateProduct(product._id, prod);
+                //message.success(res.data.message);
+                message.success(res.message);
+                setProducts(Userproducts.map((item) => (item._id === product._id ? { ...item, ...prod } : item)));
+                setSelectedProduct(null);
+          } else {
+            // Adding New Product
+            //const res = await axios.post("http://localhost:4000/api/auth/addproducts", prod, config)
+            const res = await addProduct(prod);
+                //message.success(res.data.message);
+                message.success(res.message);
+                setProducts(Array.isArray(Userproducts) ? [...Userproducts, res.data.product]: [res.data.product]);
+                //setProducts([...Userproducts, res.product]);
+          }
+          setProd({
+            productName: "",
+            description: "",
+            price: "",
+            Image: "",
+            productCount: "",
+          });  
+        } catch (error) {
+          console.error("Error submitting the product:", error);
+        }
+      };
 
   return (
     <div className='bg-dark d-flex justify-content-center align-items-center' style={{ minHeight: "91.5vh" }}>

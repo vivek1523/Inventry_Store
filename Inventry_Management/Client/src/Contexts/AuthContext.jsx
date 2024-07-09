@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useEffect ,useState} from 'react'
+//import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
+
+export const useAuth = ()=> useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [userData, setUserData] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     //const [user, setUser] = useState(null);
+    //const navigate = useNavigate();
   
 
     useEffect(()=>{
@@ -34,11 +38,14 @@ export const AuthProvider = ({ children }) => {
       setToken(null);
       setUserData(null);
       setIsAuthenticated(false)
+      //navigate('/login');
     }
 
-  return <AuthContext.Provider value={{token, isAuthenticated, login,logout,userData}}>
-      { children }
-    </AuthContext.Provider>
-}
+  return(
+    <AuthContext.Provider value={{token, isAuthenticated, login,logout,userData}}>
+    { children }
+  </AuthContext.Provider>
+  ) 
+  
 
-export const useAuth = ()=> useContext(AuthContext);
+}

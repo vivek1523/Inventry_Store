@@ -3,13 +3,13 @@ import { Card,Flex, Typography, Form, Input, Button, Alert, Spin } from 'antd'
 import { Link } from 'react-router-dom';
 import loginImage from '../assets/InventryLogin2.jpg'
 import useLogin from '../Hooks/useLogin';
-import { useAuth } from '../Contexts/AuthContext';
-import GoogleIcon from '../Images/icons8-google-48.png'
+//import { useAuth } from '../Contexts/AuthContext';
+//import GoogleIcon from '../Images/icons8-google-48.png'
 
 const Login = () => {
 
   const { error,loading, loginUser} = useLogin();
-  const { googleSignIn } = useAuth();
+  //const { googleSignIn } = useAuth();
 
   const handleLogin= async(values)=>{
     await loginUser(values);
@@ -50,11 +50,18 @@ const Login = () => {
                </Form.Item>
 
 
-               {
+               {/* {
                 error && (
                   <Alert description={error} type='error' showIcon closable className='alert'/>
                 )
+               } */}
+
+               {
+                error && (
+                    <Alert description={error.message || error.toString()} type='error' showIcon closable className='alert' />
+               )
                }
+
 
                <Form.Item>
                  <Button 

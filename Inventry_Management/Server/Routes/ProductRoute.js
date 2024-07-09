@@ -1,25 +1,34 @@
 const router = require('express').Router();
 const Product = require('../Models/ProductModels');
+const { authMiddleware }= require('../Controllers/AuthController');
 //const Connect = require('../Connection/Mongo')
 
-// Product POST Request
-router.post('/addproducts', async (req, res) => {
+//Product POST Request
+router.post('/addproducts', authMiddleware,async (req, res) => {
+  const { productName, description, price, Image, productCount } = req.body;
   try {
-    const data = req.body;
-    const newProduct = new Product(data);
-    await newProduct.save();
-    res.status(200).json({ message: 'Product Added Successfully' });
-  } catch (error) {
+    const newProduct = new Product({
+        //...req.body,
+      productName,
+      description,
+      price,
+      Image,
+      productCount,
+        user: req.user._id 
+    });
+    const savedProduct = await newProduct.save();
+    res.status(200).json({ product: savedProduct, message: 'Product added successfully' });
+} catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
-  }
+}
 });
 
 
-// Products GET Request
-router.get('/getproducts', async (req, res) => {
+//Products GET Request
+router.get('/getproducts', authMiddleware, async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find({ user: req.user._id });
     res.status(200).json({ products });
   } catch (error) {
     console.log(error);
@@ -28,10 +37,10 @@ router.get('/getproducts', async (req, res) => {
 });
 
 // Products GET Request By ID
-router.get('/getproducts/:id' ,async (req, res) => {
+router.get('/getproducts/:id' , authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await Product.findOne({ _id: id});
+    const product = await Product.findOne({ _id: id, user: req.user._id});
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
@@ -43,19 +52,19 @@ router.get('/getproducts/:id' ,async (req, res) => {
 });
 
 // Products UPDATE Request
-router.put('/updateproduct/:id', async (req, res) => {
+router.put('/updateproduct/:id', authMiddleware, async (req, res) => {
   try {
     const { id } = req.params;
     const { productName, description, price, image, productCount } = req.body;
     const product = await Product.findOneAndUpdate(
-      { _id: id },
+      { _id: id, user: req.user._id },
       { productName, description, price, image, productCount },
       { new: true }
     );
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
-    res.status(200).json({ message: 'Product Updated Successfully', product });
+    res.json({ product: updatedProduct, message: 'Product updated successfully' });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
@@ -63,10 +72,10 @@ router.put('/updateproduct/:id', async (req, res) => {
 });
 
 // Products DELETE Request
-router.delete('/deleteproduct/:id', async (req, res) => {
+router.delete('/deleteproduct/:id', authMiddleware, async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    const product = await Product.findOneAndDelete({ _id: id });
+    const product = await Product.findOneAndDelete({ _id: id, user: req.user._id });
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
@@ -76,5 +85,6 @@ router.delete('/deleteproduct/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 module.exports = router;

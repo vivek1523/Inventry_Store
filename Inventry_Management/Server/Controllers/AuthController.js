@@ -3,6 +3,43 @@ const JWT = require('jsonwebtoken')
 const User = require('../Models/UserModel');
 const createError = require('../Utils/AppError');
 
+exports.authMiddleware = async (req, res, next) => {
+  const authHeader = req.headers.authorization
+  
+  // if (!authHeader) {
+  //     console.log('Token not found in header');
+  //     return next(new createError('You are not logged in!', 401));
+  // }
+  // try {
+  //     console.log('Token:', authHeader);
+  //     const token = JWT.verify(token, 'secretKey123');
+  //     console.log('Decoded:', decoded);
+  //     const user = await User.findById(decoded._id);
+
+  //     if (!user) {
+  //         return next(new createError('The user belonging to this token does no longer exist.', 401));
+  //     }
+
+  //     req.user = user;
+  //     next();
+  // } catch (error) {
+  //     console.error('Authentication error:', error);
+  //     next(new createError('Authentication failed!', 401));
+  // }
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    JWT.verify(token, 'secretKey123', (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};
+
 exports.signup = async (req,res,next)=>{
   try {
     const user = await User.findOne({email: req.body.email});

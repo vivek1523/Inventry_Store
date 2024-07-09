@@ -6,7 +6,7 @@ const useUniqueUser = () => {
 
   const addProduct = async (productData) => {
     try {
-      const response = await axios.post('http://localhost:4000/api/auth/addproducts', productData, {
+      const response = await axios.post('https://inventry-store-server.onrender.com/api/auth/addproducts', productData, {
         headers: {
           //'Content-Type': 'application/json',
           'authorization': `Bearer ${token}`
@@ -21,7 +21,7 @@ const useUniqueUser = () => {
 
   const getProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:4000/api/auth/getproducts', {
+      const response = await axios.get('https://inventry-store-server.onrender.com/api/auth/getproducts', {
         headers: {
           'authorization': `Bearer ${token}`
         }
@@ -34,7 +34,7 @@ const useUniqueUser = () => {
   };
   const updateProduct = async (productId, productData) => {
     try {
-      const response = await axios.put(`http://localhost:4000/api/auth/updateproduct/${productId}`, productData, {
+      const response = await axios.put(`https://inventry-store-server.onrender.com/api/auth/updateproduct/${productId}`, productData, {
         headers: {
           'authorization': `Bearer ${token}`
         }
@@ -47,7 +47,7 @@ const useUniqueUser = () => {
   };
   const deleteProduct = async (productId) => {
     try {
-      const response = await axios.delete(`http://localhost:4000/api/auth/deleteproduct/${productId}`, {
+      const response = await axios.delete(`https://inventry-store-server.onrender.com/api/auth/deleteproduct/${productId}`, {
         headers: {
           'authorization': `Bearer ${token}`
         }
